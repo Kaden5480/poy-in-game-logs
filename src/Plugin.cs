@@ -15,18 +15,23 @@ namespace InGameLogs {
          * </summary>
          */
         private void Awake() {
+            UIRoot.onInit.AddListener(() => {
+                logs = new Logs();
+            });
+
             Patcher.Patch();
         }
 
-        private void Start() {
-            logs = new Logs();
-        }
         /**
          * <summary>
          * Executes each frame.
          * </summary>
          */
         private void Update() {
+            if (logs == null) {
+                return;
+            }
+
             if (InputOverlay.waitingForInput == true) {
                 return;
             }
