@@ -66,7 +66,7 @@ namespace InGameLogs {
             // Fix scrollbar
             window.scrollView.scrollBarH.SetOffset(-10f, switcherHeight);
 
-            Image switcherBg = new Image(Theme.RGB(10, 10, 10));
+            Image switcherBg = new Image(Colors.RGB(10, 10, 10));
             switcherBg.SetFill(FillType.All);
             switcher.Add(switcherBg);
 
