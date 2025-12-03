@@ -1,6 +1,7 @@
 using System;
 
 using UILib;
+using UILib.Behaviours;
 using UILib.Components;
 using UILib.Layouts;
 using UIButton = UILib.Components.Button;
@@ -82,15 +83,10 @@ namespace InGameLogs {
 
 #endregion
 
-        }
-
-        /**
-         * <summary>
-         * Toggles the visibility of the log window.
-         * </summary>
-         */
-        internal void Toggle() {
-            window.ToggleVisibility();
+            Shortcut shortcut = UIRoot.AddShortcut(new[] { KeyCode.Tab });
+            shortcut.onTrigger.AddListener(() => {
+                window.ToggleVisibility();
+            });
         }
 
 #region History
