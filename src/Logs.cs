@@ -119,7 +119,7 @@ namespace InGameLogs {
             QueueArea area = new QueueArea(logMaxSize);
             area.SetContentLayout(LayoutType.Vertical);
             area.SetAnchor(AnchorType.BottomLeft);
-            area.SetElementAlignment(TextAnchor.LowerLeft);
+            area.SetElementAlignment(AnchorType.BottomLeft);
             area.SetContentPadding(
                 10, 10, 10, 20 + (int) switcherHeight
             );
