@@ -39,7 +39,7 @@ namespace InGameLogs {
         internal Logs() {
             instance = this;
 
-            Theme theme = new Theme();
+            Theme theme = Theme.GetTheme();
             theme.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
 
             window = new Window("Logs", 1000f, 700f);
@@ -66,7 +66,7 @@ namespace InGameLogs {
             // Fix scrollbar
             window.scrollView.scrollBarH.SetOffset(-10f, switcherHeight);
 
-            Image switcherBg = new Image(Colors.RGB(10, 10, 10));
+            Image switcherBg = new Image(theme.accent);
             switcherBg.SetFill(FillType.All);
             switcher.Add(switcherBg);
 
