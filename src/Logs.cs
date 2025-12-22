@@ -82,10 +82,11 @@ namespace InGameLogs {
 
 #endregion
 
-            Shortcut shortcut = UIRoot.AddShortcut(new[] { KeyCode.Tab });
+            Shortcut shortcut = new Shortcut(new[] { KeyCode.Tab });
             shortcut.onTrigger.AddListener(() => {
                 window.ToggleVisibility();
             });
+            UIRoot.AddShortcut(shortcut);
         }
 
 #region History
