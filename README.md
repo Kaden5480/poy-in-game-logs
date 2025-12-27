@@ -18,12 +18,12 @@ mod for viewing logs in game (made with
     - [Build configuration](#build-configuration)
 
 # Installing
-## BepInEx
+### BepInEx
 If you haven't installed BepInEx yet, follow the install instructions here:
 - [Windows](https://github.com/Kaden5480/modloader-instructions#bepinex-windows)
 - [Linux](https://github.com/Kaden5480/modloader-instructions#bepinex-linux)
 
-## UILib
+### UILib
 If you haven't installed UILib yet, follow the install instructions here:
 - [UILib](https://github.com/Kaden5480/poy-ui-lib/?tab=readme-ov-file#installing)
 
@@ -49,17 +49,17 @@ dotnet build -c <configuration>
 ```
 
 ## Visual Studio build
-To build with Visual Studio, open InGameLogs.sln and build by pressing ctrl + shift + b,
+To build with Visual Studio, open `InGameLogs.sln` and build by pressing ctrl + shift + b,
 or by selecting Build -> Build Solution.
 
 ## Build configuration
 The following can be configured:
-- The path Peaks of Yore is installed at
-- Whether the mod should automatically install on build
+- The path Peaks of Yore is installed at.
+- Whether the mod should automatically install on build.
 
 Note that both of these properties are optional.
 
-The configuration file must be in the root of this repository and must be called "Config.props".
+The configuration file must be in the root of this repository and must be called `Config.props`.
 ```xml
 <Project>
   <PropertyGroup>
