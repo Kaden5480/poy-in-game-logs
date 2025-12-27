@@ -1,4 +1,8 @@
+using System.Linq;
+
 using BepInEx;
+using HarmonyLib;
+using ModMenu;
 using UILib;
 using UnityEngine;
 
@@ -15,9 +19,32 @@ namespace InGameLogs {
         private void Awake() {
             Patcher.Patch();
 
+            // Initialize the config
+            InGameLogs.Config.Init(this.Config);
+
+            // Register with mod menu
+            if (AccessTools.AllAssemblies().FirstOrDefault(
+                    a => a.GetName().Name == "ModMenu"
+                ) != null
+            ) {
+                Register();
+            }
+
+            // Build the UI
             UIRoot.onInit.AddListener(() => {
                 new Logs();
             });
+        }
+
+        /**
+         * <summary>
+         * Registers with Mod Menu.
+         * </summary>
+         */
+        private void Register() {
+            ModInfo info = ModManager.Register(this);
+            info.license = "GPL-3.0";
+            info.Add(typeof(InGameLogs.Config));
         }
     }
 }
