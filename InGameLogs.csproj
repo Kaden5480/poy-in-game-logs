@@ -3,8 +3,8 @@
     <TargetFramework>net472</TargetFramework>
     <Platform>Any CPU</Platform>
     <AssemblyName>InGameLogs</AssemblyName>
-    <Description>A Peaks of Yore mod for viewing logs in game</Description>
-    <Version>0.2.0</Version>
+    <Description>A Peaks of Yore mod for viewing logs in game.</Description>
+    <Version>0.3.0</Version>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <Configurations>Debug;Release</Configurations>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
@@ -49,6 +49,9 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp.dll">
       <HintPath>$(GameLibPath)/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ModMenu.dll">
+      <HintPath>$(PluginOutputPath)/ModMenu.dll</HintPath>
     </Reference>
     <Reference Include="UILib.dll">
       <HintPath>$(PluginOutputPath)/UILib.dll</HintPath>
