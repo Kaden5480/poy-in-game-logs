@@ -20,10 +20,6 @@ namespace InGameLogs {
         // The currently active area
         private QueueArea current;
 
-        // Maximum number of logs to store
-        // on each area
-        private int logMaxSize = 100;
-
         // Font size of the logs
         private int fontSize = 16;
 
@@ -82,7 +78,7 @@ namespace InGameLogs {
 
 #endregion
 
-            Shortcut shortcut = new Shortcut(new[] { KeyCode.Tab });
+            Shortcut shortcut = new Shortcut(new[] { Config.toggleKeybind });
             shortcut.onTrigger.AddListener(() => {
                 window.ToggleVisibility();
             });
@@ -90,6 +86,22 @@ namespace InGameLogs {
         }
 
 #region History
+
+        /**
+         * <summary>
+         * Updates the current history size.
+         * </summary>
+         * <param name="max">The maximum number of logs to retain</param>
+         */
+        internal static void SetMaxHistory(int max) {
+            if (instance == null) {
+                return;
+            }
+
+            instance.errorHistory.SetLimit(max);
+            instance.infoHistory.SetLimit(max);
+            instance.debugHistory.SetLimit(max);
+        }
 
         /**
          * <summary>
@@ -116,7 +128,7 @@ namespace InGameLogs {
          * <param name="theme">The theme to set on the area</param>
          */
         private QueueArea CreateHistory(Theme theme) {
-            QueueArea area = new QueueArea(logMaxSize);
+            QueueArea area = new QueueArea(Config.maxHistory.Value);
             area.SetContentLayout(LayoutType.Vertical);
             area.SetAnchor(AnchorType.BottomLeft);
             area.SetElementAlignment(AnchorType.BottomLeft);
@@ -150,7 +162,6 @@ namespace InGameLogs {
             current.Show();
 
             window.SetName($"{name} Logs");
-            window.ScrollToBottom();
         }
 
 #endregion
