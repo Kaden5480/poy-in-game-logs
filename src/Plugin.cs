@@ -9,6 +9,11 @@ using UnityEngine;
 using InGameLogs.Patches;
 
 namespace InGameLogs {
+    [BepInDependency("com.github.Kaden5480.poy-ui-lib")]
+    [BepInDependency(
+        "com.github.Kaden5480.poy-mod-menu",
+        BepInDependency.DependencyFlags.SoftDependency
+    )]
     [BepInPlugin("com.github.Kaden5480.poy-in-game-logs", "In Game Logs", PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin {
         /**
