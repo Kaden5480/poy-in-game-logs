@@ -20,28 +20,29 @@ namespace InGameLogs.Patches {
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ManualLogSource), "Log")]
         private static void BepInLog(
-            LogLevel level, object data
+            ManualLogSource __instance, LogLevel level, object data
         ) {
             LogLevel l = level;
+            string message = $"[{__instance.SourceName}] {data}";
 
             // Error logs
             if (l.HasFlag(LogLevel.Fatal) == true
                 || l.HasFlag(LogLevel.Error) == true
                 || l.HasFlag(LogLevel.Warning) == true
             ) {
-                Logs.AddError(data);
+                Logs.AddError(message);
             }
 
             // Informational logs
             if (l.HasFlag(LogLevel.Message) == true
                 || l.HasFlag(LogLevel.Info) == true
             ) {
-                Logs.AddInfo(data);
+                Logs.AddInfo(message);
             }
 
             // Debug logs
             if (l.HasFlag(LogLevel.Debug) == true) {
-                Logs.AddDebug(data);
+                Logs.AddDebug(message);
             }
         }
     }
