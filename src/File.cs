@@ -74,6 +74,10 @@ namespace InGameLogs {
          * <param name="bepin">Whether the log originated from BepInEx</param>
          */
         private void AddLog(string level, object data, bool bepin) {
+            if (data == null) {
+                return;
+            }
+
             // Don't log if disabled
             if (Config.File.enabled.Value == false) {
                 return;
@@ -84,7 +88,7 @@ namespace InGameLogs {
                 return;
             }
 
-            writer.WriteLine($"[{Logs.timeNow}] {data}");
+            writer.WriteLine($"[{Logs.timeNow} | {level,5}] {data.ToString().Trim()}");
         }
 
         /**
