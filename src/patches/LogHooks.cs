@@ -1,3 +1,5 @@
+using System.Text;
+
 using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
@@ -30,19 +32,19 @@ namespace InGameLogs.Patches {
                 || l.HasFlag(LogLevel.Error) == true
                 || l.HasFlag(LogLevel.Warning) == true
             ) {
-                Logs.AddError(message);
+                Logs.AddError(message, true);
             }
 
             // Informational logs
             if (l.HasFlag(LogLevel.Message) == true
                 || l.HasFlag(LogLevel.Info) == true
             ) {
-                Logs.AddInfo(message);
+                Logs.AddInfo(message, true);
             }
 
             // Debug logs
             if (l.HasFlag(LogLevel.Debug) == true) {
-                Logs.AddDebug(message);
+                Logs.AddDebug(message, true);
             }
         }
     }
@@ -75,10 +77,25 @@ namespace InGameLogs.Patches {
             string stackTrace,
             LogType logType
         ) {
-            // Stick everything into one big string
-            string fullLog = log;
-            if (string.IsNullOrEmpty(fullLog) == false) {
-                fullLog = $"{fullLog}\n{stackTrace}";
+            StringBuilder builder = new StringBuilder();
+
+            // Add the normal log
+            if (string.IsNullOrEmpty(log) == false) {
+                builder.Append(log);
+            }
+
+            // Add stack trace
+            if (string.IsNullOrEmpty(stackTrace) == false) {
+                builder.Append("\n");
+            }
+
+            foreach (string line in Logs.Split(stackTrace)) {
+                string trimmed = line.Trim();
+
+                if (string.IsNullOrEmpty(trimmed) == false) {
+                    builder.Append($"  at {trimmed}\n");
+                }
+
             }
 
             switch (logType) {
@@ -86,11 +103,11 @@ namespace InGameLogs.Patches {
                 case LogType.Assert:
                 case LogType.Warning:
                 case LogType.Exception:
-                    Logs.AddError(fullLog);
+                    Logs.AddError(builder.ToString());
                     break;
 
                 case LogType.Log:
-                    Logs.AddInfo(fullLog);
+                    Logs.AddInfo(builder.ToString());
                     break;
             }
         }
