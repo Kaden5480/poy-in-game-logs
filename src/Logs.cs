@@ -8,14 +8,37 @@ namespace InGameLogs {
      */
     internal static class Logs {
         internal const string timeFormat = "yyyy-MM-dd HH:mm:ss";
+        internal const string timeFormatPrecise = "yyyy-MM-dd HH:mm:ss.fff";
         internal const string timeFormatSafe = "yyyy-MM-dd_HH-mm-ss";
 
+        // Normal logging time string
         internal static string timeNow {
-            get => DateTime.Now.ToString(timeFormat);
+            get => (Config.General.morePrecision.Value == true)
+                ? DateTime.Now.ToString(timeFormatPrecise)
+                : DateTime.Now.ToString(timeFormat);
         }
 
+        // File safe time string
         internal static string timeNowSafe {
             get => DateTime.Now.ToString(timeNowSafe);
+        }
+
+        /**
+         * <summary>
+         * Splits a string by new lines.
+         * </summary>
+         * <param name="str">The string to split</param>
+         * <returns>The split string</returns>
+         */
+        internal static string[] Split(string str) {
+            if (string.IsNullOrEmpty(str) == true) {
+                return new string[] {};
+            }
+
+            return str.Split(
+                new[] { "\r\n", "\r", "\n" },
+                StringSplitOptions.None
+            );
         }
 
         /**

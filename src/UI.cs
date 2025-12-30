@@ -200,15 +200,14 @@ namespace InGameLogs {
             string log = data.ToString();
             string timeNow = Logs.timeNow;
 
-            foreach (string line in log.Split(
-                new [] { "\r\n", "\r", "\n" },
-                StringSplitOptions.None
-            )) {
-                if (string.IsNullOrEmpty(line) == true) {
+            foreach (string line in Logs.Split(log)) {
+                string trimmed = line.Trim();
+
+                if (string.IsNullOrEmpty(trimmed) == true) {
                     continue;
                 }
 
-                Label label = new Label($"[{timeNow}] {line.Trim()}", fontSize);
+                Label label = new Label($"[{timeNow}] {trimmed}", fontSize);
                 label.SetSize(0f, fontSize+10);
                 label.SetFill(FillType.Horizontal);
 
