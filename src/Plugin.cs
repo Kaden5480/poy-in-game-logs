@@ -25,7 +25,9 @@ namespace InGameLogs {
             Patcher.Patch();
 
             // Initialize the config
-            InGameLogs.Config.Init(this.Config);
+            InGameLogs.Config.General.Init(this.Config);
+            InGameLogs.Config.File.Init(this.Config);
+            InGameLogs.Config.UI.Init(this.Config);
 
             // Register with mod menu
             if (AccessTools.AllAssemblies().FirstOrDefault(
@@ -37,7 +39,7 @@ namespace InGameLogs {
 
             // Build the UI
             UIRoot.onInit.AddListener(() => {
-                new Logs();
+                new UI();
             });
         }
 
@@ -49,7 +51,9 @@ namespace InGameLogs {
         private void Register() {
             ModInfo info = ModManager.Register(this);
             info.license = "GPL-3.0";
-            info.Add(typeof(InGameLogs.Config));
+            info.Add(typeof(InGameLogs.Config.General));
+            info.Add(typeof(InGameLogs.Config.File));
+            info.Add(typeof(InGameLogs.Config.UI));
         }
     }
 }

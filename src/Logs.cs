@@ -1,249 +1,69 @@
 using System;
 
-using UILib;
-using UILib.Components;
-using UILib.Layouts;
-using UIButton = UILib.Components.Button;
-using UnityEngine;
-
 namespace InGameLogs {
-    internal class Logs {
-        private static Logs instance;
+    /**
+     * <summary>
+     * Handles adding logs to different sources.
+     * </summary>
+     */
+    internal static class Logs {
+        internal const string timeFormat = "yyyy-MM-dd HH:mm:ss";
+        internal const string timeFormatSafe = "yyyy-MM-dd_HH-mm-ss";
 
-        private Window window;
-
-        // All of the history areas
-        private QueueArea errorHistory;
-        private QueueArea infoHistory;
-        private QueueArea debugHistory;
-
-        // The currently active area
-        private QueueArea current;
-
-        // Font size of the logs
-        private int fontSize = 16;
-
-        // How big the control area for
-        // switching between histories should be
-        private float switcherHeight = 80f;
-
-        /**
-         * <summary>
-         * Initializes the log UI.
-         * </summary>
-         */
-        internal Logs() {
-            instance = this;
-
-            Theme theme = Theme.GetTheme();
-            theme.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
-
-            window = new Window("Logs", 1000f, 700f);
-
-            errorHistory = CreateHistory(theme);
-            infoHistory = CreateHistory(theme);
-            debugHistory = CreateHistory(theme);
-
-            window.Add(errorHistory);
-            window.Add(infoHistory);
-            window.Add(debugHistory);
-
-            SetCurrentArea("Error", errorHistory);
-
-#region Switcher
-
-            Area switcher = new Area();
-            switcher.SetAnchor(AnchorType.BottomMiddle);
-            switcher.SetFill(FillType.Horizontal);
-            switcher.SetSize(-20f, switcherHeight);
-            switcher.SetOffset(-10f, 0f);
-            window.AddDirect(switcher);
-
-            // Fix scrollbar
-            window.scrollView.scrollBarH.SetOffset(-10f, switcherHeight);
-
-            Image switcherBg = new Image(theme.accent);
-            switcherBg.SetFill(FillType.All);
-            switcher.Add(switcherBg);
-
-            // Controls
-            Area controls = new Area();
-            controls.SetContentLayout(LayoutType.Horizontal);
-            controls.SetElementSpacing(20);
-            switcher.Add(controls);
-
-            controls.Add(MakeSwitchButton("Debug", debugHistory));
-            controls.Add(MakeSwitchButton("Info", infoHistory));
-            controls.Add(MakeSwitchButton("Error", errorHistory));
-
-#endregion
-
-            Shortcut shortcut = new Shortcut(new[] { Config.toggleKeybind });
-            shortcut.onTrigger.AddListener(() => {
-                window.ToggleVisibility();
-            });
-            UIRoot.AddShortcut(shortcut);
+        internal static string timeNow {
+            get => DateTime.Now.ToString(timeFormat);
         }
 
-#region History
-
-        /**
-         * <summary>
-         * Updates the current history size.
-         * </summary>
-         * <param name="max">The maximum number of logs to retain</param>
-         */
-        internal static void SetMaxHistory(int max) {
-            if (instance == null) {
-                return;
-            }
-
-            instance.errorHistory.SetLimit(max);
-            instance.infoHistory.SetLimit(max);
-            instance.debugHistory.SetLimit(max);
+        internal static string timeNowSafe {
+            get => DateTime.Now.ToString(timeNowSafe);
         }
 
         /**
          * <summary>
-         * Helper method for creating a button
-         * for switching to different areas.
-         * </summary>
-         * <param name="name">The name of the area this button is for</param>
-         * <param name="area">The area this button should switch to</param>
-         */
-        private UIButton MakeSwitchButton(string name, QueueArea area) {
-            UIButton button = new UIButton(name, 20);
-            button.SetSize(100f, 40f);
-            button.onClick.AddListener(() => {
-                SetCurrentArea(name, area);
-            });
-            return button;
-        }
-
-        /**
-         * <summary>
-         * Helper method for creating an area
-         * for storing log history.
-         * </summary>
-         * <param name="theme">The theme to set on the area</param>
-         */
-        private QueueArea CreateHistory(Theme theme) {
-            QueueArea area = new QueueArea(Config.maxHistory.Value);
-            area.SetContentLayout(LayoutType.Vertical);
-            area.SetAnchor(AnchorType.BottomLeft);
-            area.SetElementAlignment(AnchorType.BottomLeft);
-            area.SetContentPadding(
-                10, 10, 10, 20 + (int) switcherHeight
-            );
-            area.SetTheme(theme);
-            area.Hide();
-
-            return area;
-        }
-
-        /**
-         * <summary>
-         * Switches the window to display a different area.
-         * </summary>
-         * <param name="name">The name of the area (displayed in title bar)</param>
-         * <param name="area">The area to switch to</param>
-         */
-        private void SetCurrentArea(string name, QueueArea area) {
-            if (current != null) {
-                current.Hide();
-            }
-
-            current = area;
-
-            // Make sure the scroll view scrolls over
-            // the area which was set
-            window.scrollView.SetContent(current);
-
-            current.Show();
-
-            window.SetName($"{name} Logs");
-        }
-
-#endregion
-
-#region Logs
-
-        /**
-         * <summary>
-         * Adds a log to one of the areas.
-         * </summary>
-         * <param name="area">The area to add to</param>
-         * <param name="data">The data to add</param>
-         */
-        internal void AddLog(QueueArea area, object data) {
-            if (area == null) {
-                return;
-            }
-
-            string log = data.ToString();
-            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-            foreach (string line in log.Split(
-                new [] { "\r\n", "\r", "\n" },
-                StringSplitOptions.None
-            )) {
-                if (string.IsNullOrEmpty(line) == true) {
-                    continue;
-                }
-
-                Label label = new Label($"[{now}] {line.Trim()}", fontSize);
-                label.SetSize(0f, fontSize+10);
-                label.SetFill(FillType.Horizontal);
-
-                // Make sure the label inherits the theme
-                // (this is why `true` is used)
-                area.Add(label, true);
-            }
-        }
-
-        /**
-         * <summary>
-         * Adds a log to the error area.
+         * Adds debug logs.
          * </summary>
          * <param name="data">The data to add</param>
+         * <param name="bepin">Whether the log originated from BepInEx</param>
          */
-        internal static void AddError(object data) {
-            if (instance == null) {
+        internal static void AddDebug(object data, bool bepin = false) {
+            if (Config.General.enabled.Value == false) {
                 return;
             }
 
-            instance.AddLog(instance.errorHistory, data);
+            UI.AddDebug(data);
+            File.AddDebug(data, bepin);
         }
 
         /**
          * <summary>
-         * Adds a log to the info area.
+         * Adds info logs.
          * </summary>
          * <param name="data">The data to add</param>
+         * <param name="bepin">Whether the log originated from BepInEx</param>
          */
-        internal static void AddInfo(object data) {
-            if (instance == null) {
+        internal static void AddInfo(object data, bool bepin = false) {
+            if (Config.General.enabled.Value == false) {
                 return;
             }
 
-            instance.AddLog(instance.infoHistory, data);
+            UI.AddInfo(data);
+            File.AddInfo(data, bepin);
         }
 
         /**
          * <summary>
-         * Adds a log to the debug area.
+         * Adds error logs.
          * </summary>
          * <param name="data">The data to add</param>
+         * <param name="bepin">Whether the log originated from BepInEx</param>
          */
-        internal static void AddDebug(object data) {
-            if (instance == null) {
+        internal static void AddError(object data, bool bepin = false) {
+            if (Config.General.enabled.Value == false) {
                 return;
             }
 
-            instance.AddLog(instance.debugHistory, data);
+            UI.AddError(data);
+            File.AddError(data, bepin);
         }
-
-#endregion
-
     }
 }
