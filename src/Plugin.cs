@@ -29,6 +29,9 @@ namespace InGameLogs {
             InGameLogs.Config.File.Init(this.Config);
             InGameLogs.Config.UI.Init(this.Config);
 
+            // Start the file logger
+            new File();
+
             // Register with mod menu
             if (AccessTools.AllAssemblies().FirstOrDefault(
                     a => a.GetName().Name == "ModMenu"
