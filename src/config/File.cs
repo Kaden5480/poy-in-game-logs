@@ -7,6 +7,7 @@ namespace InGameLogs.Config {
      * Holds the file logging config.
      * </summary>
      */
+    [Category("File Logging")]
     internal static class File {
         [Field("Enabled")]
         internal static ConfigEntry<bool> enabled { get; private set; }

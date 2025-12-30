@@ -10,6 +10,7 @@ namespace InGameLogs.Config {
      * Holds the UI's config.
      * </summary>
      */
+    [Category("UI Logging")]
     internal static class UI {
         [Field("Toggle Keybind")]
         internal static ConfigEntry<KeyCode> toggleKeybind { get; private set; }
