@@ -11,6 +11,9 @@ namespace InGameLogs.Config {
         [Field("Enabled")]
         internal static ConfigEntry<bool> enabled { get; private set; }
 
+        [Field("More Precision")]
+        internal static ConfigEntry<bool> morePrecision { get; private set; }
+
         /**
          * <summary>
          * Initializes the general config.
@@ -21,6 +24,11 @@ namespace InGameLogs.Config {
             enabled = configFile.Bind(
                 "General", "enabled", true,
                 "Whether logging is enabled (controls both file and UI logging)."
+            );
+
+            morePrecision = configFile.Bind(
+                "General", "morePrecision", false,
+                "Whether logs should also include milliseconds."
             );
         }
     }
